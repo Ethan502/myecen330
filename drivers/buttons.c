@@ -3,14 +3,21 @@
 
 #include "buttons.h"
 
+#define TRI_ADDR 0x04
+
+uint32_t readRegister(uint32_t offset);
+void writeRegister(uint32_t offset, uint32_t value);
+
 void buttons_init()
 {
-    //the while loop will keep the driver constantly refreshing
-    while(1)
-    {
-        
+   //turn off the tri driver
+   writeRegister(TRI_ADDR, 0xFF);
 
-    }
+   //the while loop will keep the driver constantly refreshing
+   while(1)
+   {
+      
+   }
 }
 
 //function to automatically use the base address, so that I don't have to
