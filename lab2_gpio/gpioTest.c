@@ -1,4 +1,11 @@
 #include "gpioTest.h"
+#include "buttons.h"
+#include "display.h"
+#include "leds.h"
+#include "switches.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 
 #define ZEROS 0x0000
 #define ONES 0x0F

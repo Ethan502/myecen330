@@ -24,4 +24,3 @@ uint8_t buttons_read() { return readRegisterB(DATA_ADDR); }
 
 // function to automatically use the base address, so that I don't have to
 // returns the register value as a 32bit uint
-

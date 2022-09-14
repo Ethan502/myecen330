@@ -23,5 +23,3 @@ void switches_init() { writeRegisterS(TRI_ADDR, ALL_ONES); }
 
 // read the switches
 uint8_t switches_read() { return readRegisterS(DATA_ADDR); }
-
-
