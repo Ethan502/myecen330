@@ -27,9 +27,9 @@ void buttons_init();
 uint8_t buttons_read();
 
 //helper function to return the value of the buttons register
-uint32_t readRegister(uint32_t offset);
+uint32_t readRegisterB(uint32_t offset);
 
 //helper function to write to the buttons register
-void writeRegister(uint32_t offset, uint32_t value);
+void writeRegisterB(uint32_t offset, uint32_t value);
 
 #endif /* BUTTONS */

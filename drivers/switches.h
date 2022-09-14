@@ -26,4 +26,11 @@ void switches_init();
 // returned value. bit3 = SW3, bit2 = SW2, bit1 = SW1, bit0 = SW0.
 uint8_t switches_read();
 
+//helper function to return the value of the buttons register
+uint32_t readRegisterS(uint32_t offset);
+
+//helper function to write to the buttons register
+void writeRegisterS(uint32_t offset, uint32_t value);
+
+
 #endif /* SWITCHES */
