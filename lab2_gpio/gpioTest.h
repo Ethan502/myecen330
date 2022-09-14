@@ -16,6 +16,7 @@
 #define WIDTH_THREEFOURTHS (DISPLAY_WIDTH/4)*3
 #define WIDTH_HALF DISPLAY_WIDTH/2
 #define WIDTH_FOURTH DISPLAY_WIDTH/4
+#define RECT_WIDTH 80
 
 #define BTN0_TEXT_WIDTH ((DISPLAY_WIDTH/4)*3)+20
 #define BTN1_TEXT_WIDTH (DISPLAY_WIDTH/2) + 20
@@ -27,6 +28,7 @@
 #define HEIGHT_FIFTH DISPLAY_HEIGHT/5
 
 #define Y_UPPER_BOUND 0
+#define X_LEFT_BOUND 0
 
 // Runs a test of the buttons. As you push the buttons, graphics and messages
 // will be written to the LCD panel. The test will until all 4 pushbuttons are

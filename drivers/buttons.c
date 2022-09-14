@@ -7,11 +7,13 @@
 #define DATA_ADDR 0x0000
 #define ALL_ONES 0x000F 
 
+//initialize the buttons on the TRI register
 void buttons_init()
 {
    writeRegisterB(TRI_ADDR, ALL_ONES);
 }
 
+//functions to read the buttons
 uint8_t buttons_read()
 {
    return readRegisterB(DATA_ADDR);

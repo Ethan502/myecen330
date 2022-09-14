@@ -7,11 +7,13 @@
 #define DATA_ADDR 0x0000
 #define ALL_ONES 0x000F 
 
+//init the tri register on the switches
 void switches_init()
 {
     writeRegisterS(TRI_ADDR, ALL_ONES);
 }
 
+//read the switches
 uint8_t switches_read()
 {
     return readRegisterS(DATA_ADDR);
