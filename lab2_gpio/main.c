@@ -14,7 +14,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #include "gpioTest.h"
 
-
 // Run switches and buttons runTest functions
 int main() {
   gpioTest_switches();
