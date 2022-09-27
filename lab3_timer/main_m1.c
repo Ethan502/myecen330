@@ -76,7 +76,9 @@ static uint32_t readTimer0Reg(uint32_t registerOffset) {
 
 // Test UP Counter for Timer 0
 static void testUpCounter() {
+  printf("what\n");
   printf("Calling `initCountUp` to initialize the timer.\n");
+  printf("this should work\n");
   intervalTimer_initCountUp(INTERVAL_TIMER_0);
   printf("timer_0 TCR0 should be 0: %u\n", readTimer0Reg(TCR0_OFFSET));
 
