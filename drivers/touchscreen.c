@@ -18,29 +18,6 @@ static bool isAckd = false;
 static display_point_t point;
 
 // the state debugger
-void debugStatePrint() {
-
-  static enum states previousState;
-  static bool firstPass = true;
-  // Only print the message if:
-  // 1. This the first pass and the value for previousState is unknown.
-  // 2. previousState != currentState - this prevents reprinting the same state
-  // name over and over.
-  if (previousState != CURR_STATE || firstPass) {
-    firstPass = false; // previousState will be defined, firstPass is false.
-    previousState =
-        CURR_STATE;       // keep track of the last
-
-  // switch statement to update the states and mealy outputs
-  uint8_t z;
-  switch (CURR_STATE) {
-  case WAITING:
-    case PRESSED_ST:
-      printf(PRESSED_ST_MSG);
-      break;
-    }
-  }
-}
 
 // initialize the touchscreen SM variables and initial state
 void touchscreen_init(double period_seconds) {
@@ -53,7 +30,7 @@ void touchscreen_init(double period_seconds) {
 // track my ticks and the state machine
 void touchscreen_tick() {
   // print the debug statement
-  debugStatePrint();
+  
 
   // switch statement to update the states and mealy outputs
   uint8_t z;
@@ -99,7 +76,6 @@ void touchscreen_tick() {
     break;
 
   case PRESSED_ST:
-    debugStatePrint();
     isAckd = false;
     break;
   default:
