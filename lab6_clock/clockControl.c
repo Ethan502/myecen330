@@ -77,19 +77,28 @@ void clockControl_tick()
                 currState = LONG_PRESS_DELAY;
                 break;
             }
+            else //loop through if nothing happened
+            {
+                currState = WAITING;
+                break;
+            }
         case LONG_PRESS_DELAY: //items if the screen is pressed longer than half a second
             if (touchscreen_get_status() ==  TOUCHSCREEN_RELEASED)
             {
                 currState = INC_DEC;
                 break;
             }
-            else if (delay_cnt == delay_num_ticks)
+            else if (delay_cnt == delay_num_ticks) //if the clock has ticked half a second
             {
                 update_cnt = NONE;
                 currState = FAST_UPDATE;
                 break;
             }
-            else {currState = LONG_PRESS_DELAY;break;}
+            else //stay in the same state if nothing changes
+            {
+                currState = LONG_PRESS_DELAY;
+                break;
+            }
         case INC_DEC: //basic increment state
             if (touchscreen_get_status() ==  TOUCHSCREEN_RELEASED)
             {
@@ -98,14 +107,14 @@ void clockControl_tick()
                 break;
             }
         case FAST_UPDATE: //state to update the state super fast
-            if((touchscreen_get_status() != TOUCHSCREEN_RELEASED) && (update_cnt == update_num_ticks))
+            if((touchscreen_get_status() != TOUCHSCREEN_RELEASED) && (update_cnt == update_num_ticks)) //the the screen is released and it has ticked for a tenth of a second
             {
                 update_cnt = 0;
                 clockDisplay_performIncDec(touchscreen_get_location());
                 currState = FAST_UPDATE;
                 break;
             }
-            else if (touchscreen_get_status() == TOUCHSCREEN_RELEASED)
+            else if (touchscreen_get_status() == TOUCHSCREEN_RELEASED) //check if touchscreen is released
             {
                 touchscreen_ack_touch();
                 currState = WAITING;
@@ -117,8 +126,10 @@ void clockControl_tick()
     //switch statement for the Moore cases of the SM
     switch(currState)
     {
+        case WAITING:
+            break;
         case INC_DEC:
-            clockDisplay_performIncDec(touchscreen_get_location());
+            clockDisplay_performIncDec(touchscreen_get_location()); //increment or decrease it
             break;
         case LONG_PRESS_DELAY:
             delay_cnt++;
