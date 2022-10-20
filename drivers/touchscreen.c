@@ -30,7 +30,6 @@ void touchscreen_init(double period_seconds) {
 // track my ticks and the state machine
 void touchscreen_tick() {
   // print the debug statement
-  
 
   // switch statement to update the states and mealy outputs
   uint8_t z;
