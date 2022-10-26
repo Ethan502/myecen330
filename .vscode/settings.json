@@ -8,6 +8,7 @@
     "C_Cpp.clang_format_fallbackStyle": "LLVM",
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "tictactoedisplay.h": "c"
     }
 }
