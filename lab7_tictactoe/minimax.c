@@ -206,7 +206,7 @@ tictactoe_location_t minimax_computeNextMove(tictactoe_board_t *board,
 }
 
 // a function to print the passed board
-void printBoard(tictactoe_board_t *board, bool is_Xs_turn) {
+void printBoard(tictactoe_board_t *board) {
   // loop through the rows
   for (uint8_t i = 0; i < TICTACTOE_BOARD_ROWS; i++) {
     printf("\n");

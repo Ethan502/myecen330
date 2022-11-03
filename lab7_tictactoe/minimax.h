@@ -61,4 +61,6 @@ void minimax_initBoard(tictactoe_board_t *board);
 // Determine that the game is over by looking at the score.
 bool minimax_isGameOver(minimax_score_t score);
 
+void printBoard(tictactoe_board_t *board);
+
 #endif /* MINIMAX */
