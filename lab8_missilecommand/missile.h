@@ -36,7 +36,7 @@ typedef struct {
   int16_t y_current;
 
   // While flying, this tracks the current length of the flight path
-  uint16_t length;
+  double length;
 
   // While flying, this flag is used to indicate the missile should be detonated
   bool explode_me;
