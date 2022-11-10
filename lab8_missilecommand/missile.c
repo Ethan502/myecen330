@@ -115,7 +115,9 @@ bool missile_is_flying(missile_t *missile) {
   }
 }
 
-void missile_trigger_explosion(missile_t *missile) {}
+void missile_trigger_explosion(missile_t *missile) {
+  missile->explode_me = true;
+}
 
 // do the repeated updates of the missile paths
 static void update_current(missile_t *missile) {
@@ -131,7 +133,12 @@ void missile_tick(missile_t *missile) {
   // all the mealy outputs
   switch (missile->currentState) {
   case MOVE: // if the missile is moving to the desination
-    if (missile->length >= missile->total_length) {
+    if (missile->explode_me) {
+      display_drawLine(missile->x_origin, missile->y_origin, missile->x_current,
+                       missile->y_current, DISPLAY_BLACK);
+      missile->currentState = EXGROW;
+      break;
+    } else if (missile->length >= missile->total_length) {
       if (missile->type == MISSILE_TYPE_ENEMY) {
         missile->currentState = DEAD; // reset the red enemy missiles
         display_drawLine(missile->x_origin, missile->y_origin,
@@ -153,8 +160,8 @@ void missile_tick(missile_t *missile) {
 
   case EXSHRINK: // make the explosions shrink
     if (missile->radius <= ZERO) {
-      display_fillCircle(missile->x_dest, missile->y_dest, missile->radius,
-                         DISPLAY_BLACK);
+      display_fillCircle(missile->x_current, missile->y_current,
+                         missile->radius, DISPLAY_BLACK);
       missile->currentState = DEAD;
       break;
     }
@@ -165,13 +172,19 @@ void missile_tick(missile_t *missile) {
     display_drawLine(missile->x_origin, missile->y_origin, missile->x_current,
                      missile->y_current, DISPLAY_BLACK);
     if (missile->type == MISSILE_TYPE_ENEMY) {
-      missile->length += CONFIG_ENEMY_MISSILE_DISTANCE_PER_TICK;
+      missile->length += CONFIG_ENEMY_MISSILE_DISTANCE_PER_TICK * 2;
+      if (missile->length > missile->total_length) {
+        missile->length = missile->total_length;
+      }
       update_current(missile); // do the normal line updates with the percentage
       display_drawLine(missile->x_origin, missile->y_origin, missile->x_current,
                        missile->y_current, DISPLAY_RED);
       break;
     } else if (missile->type == MISSILE_TYPE_PLAYER) {
-      missile->length += CONFIG_PLAYER_MISSILE_DISTANCE_PER_TICK;
+      missile->length += CONFIG_PLAYER_MISSILE_DISTANCE_PER_TICK * 2;
+      if (missile->length > missile->total_length) {
+        missile->length = missile->total_length;
+      }
       update_current(missile); // do the normal line updates with the percentage
       display_drawLine(missile->x_origin, missile->y_origin, missile->x_current,
                        missile->y_current, DISPLAY_GREEN);
@@ -180,16 +193,27 @@ void missile_tick(missile_t *missile) {
   // increase the explosion radius in this state
   case EXGROW:
     if (missile->type == MISSILE_TYPE_PLAYER) {
-      missile->radius += CONFIG_EXPLOSION_RADIUS_CHANGE_PER_TICK;
-      display_fillCircle(missile->x_dest, missile->y_dest, missile->radius,
-                         DISPLAY_GREEN);
+      missile->radius += CONFIG_EXPLOSION_RADIUS_CHANGE_PER_TICK * 2;
+      display_fillCircle(missile->x_current, missile->y_current,
+                         missile->radius, DISPLAY_GREEN);
+    } else if (missile->type == MISSILE_TYPE_ENEMY) {
+      missile->radius += CONFIG_EXPLOSION_RADIUS_CHANGE_PER_TICK * 2;
+      display_fillCircle(missile->x_current, missile->y_current,
+                         missile->radius, DISPLAY_RED);
     }
     break;
   case EXSHRINK: // make the explosions shrink
-    display_fillCircle(missile->x_dest, missile->y_dest, missile->radius,
+    display_fillCircle(missile->x_current, missile->y_current, missile->radius,
                        DISPLAY_BLACK);
 
-    missile->radius -= CONFIG_EXPLOSION_RADIUS_CHANGE_PER_TICK;
+    missile->radius -= CONFIG_EXPLOSION_RADIUS_CHANGE_PER_TICK * 2;
+    if (missile->type == MISSILE_TYPE_PLAYER) {
+      display_fillCircle(missile->x_current, missile->y_current,
+                         missile->radius, DISPLAY_GREEN);
+    } else if (missile->type == MISSILE_TYPE_ENEMY) {
+      display_fillCircle(missile->x_current, missile->y_current,
+                         missile->radius, DISPLAY_RED);
+    }
     break;
   }
 }
