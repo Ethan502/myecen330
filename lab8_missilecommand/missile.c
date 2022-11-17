@@ -16,11 +16,21 @@
 #define ONE_HALF_WIDTH (ONE_QUARTER_WIDTH * 2)
 #define THREE_QUARTERS_WIDTH (ONE_QUARTER_WIDTH * 3)
 
+#define IMPACTED_WRITE_OFFSET 70
+
+#define SCORE_Y 5
+
+#define OFFSET_FOR_STATS 6
+
+static int oldImpacts = 0;
+static int newImpacts = 0;
+
 enum states { INIT, MOVE, EXGROW, EXSHRINK, DEAD };
 
 // init function to make the missile dead
 void missile_init_dead(missile_t *missile) { missile->currentState = DEAD; }
 
+// does the init stuff for the plane that is for all the planes
 static void general_init(missile_t *missile) {
   // math to find the total length
   int16_t y_comp = missile->y_dest - missile->y_origin;
@@ -45,7 +55,7 @@ void missile_init_enemy(missile_t *missile) {
   missile->type = MISSILE_TYPE_ENEMY;
   // set the origin randomly in the top of the screen
   missile->x_origin = rand() % DISPLAY_WIDTH;
-  missile->y_origin = rand() % FIRST_SIXTH_HEIGHT;
+  missile->y_origin = rand() % FIRST_SIXTH_HEIGHT + OFFSET_FOR_STATS;
   // set the destination point randomly, but along the bottom edge
   missile->x_dest = rand() % DISPLAY_WIDTH;
   missile->y_dest = DISPLAY_HEIGHT;
@@ -142,6 +152,7 @@ void missile_tick(missile_t *missile) {
       break;
     } else if (missile->length >= missile->total_length) {
       if (missile->type == MISSILE_TYPE_ENEMY) {
+        missile->impacted = true;     // impact the missile
         missile->currentState = DEAD; // reset the red enemy missiles
         display_drawLine(missile->x_origin, missile->y_origin,
                          missile->x_current, missile->y_current, DISPLAY_BLACK);
@@ -151,6 +162,7 @@ void missile_tick(missile_t *missile) {
         missile->currentState = EXGROW; // make the green missiles explode
       } else if (missile->type == MISSILE_TYPE_PLANE) {
         missile->currentState = DEAD;
+        missile->impacted = true; // impact the missile
         display_drawLine(missile->x_origin, missile->y_origin,
                          missile->x_current, missile->y_current, DISPLAY_BLACK);
       }

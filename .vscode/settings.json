@@ -10,7 +10,9 @@
     "files.associations": {
         "iostream": "cpp",
         "tictactoedisplay.h": "c",
-        "display.h": "c"
+        "display.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c"
     },
     "cmake.configureOnOpen": true
 }

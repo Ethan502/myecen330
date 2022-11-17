@@ -5,14 +5,17 @@
 #include "missile.h"
 #include "stdio.h"
 
+// no magic numbers >:(
 #define PLANE_HEIGHT DISPLAY_HEIGHT / 3
 #define PLANE_X_OFFSET 10
 #define PLANE_Y_OFFSET 5
-#define PLANE_SECONDS_TO_WAIT 6
+#define PLANE_SECONDS_TO_WAIT 4
 #define ZERO 0
+#define TWO 2
 
-enum states { MOVE, DEAD } currState;
+enum states { MOVE, DEAD } currState; // states of the plane
 
+// global variables that I will need
 static display_point_t planeCenter;
 static bool killPlane = false;
 static uint16_t planeWait;
@@ -36,6 +39,7 @@ void plane_init(missile_t *plane_missile) {
 
   // make a more local pointer to the missile
   pMissile = plane_missile;
+  pMissile->type = MISSILE_TYPE_PLANE;
 
   // set some plane stuff
   planeCenter.x = DISPLAY_WIDTH;
@@ -57,6 +61,7 @@ void plane_tick() {
       draw_plane(planeCenter.x, DISPLAY_BLACK);
       planeCenter.x = DISPLAY_WIDTH;
       waitCount = ZERO;
+      killPlane = false;
     } else if (planeCenter.x <= ZERO) {
       draw_plane(planeCenter.x, DISPLAY_BLACK);
       currState = DEAD;
@@ -75,17 +80,17 @@ void plane_tick() {
   }
 
   switch (currState) { // switch statement for the moore stuff
-  case MOVE:
+  case MOVE:           // if the plane is moving
     draw_plane(planeCenter.x, DISPLAY_BLACK);
-    planeCenter.x -= CONFIG_PLANE_DISTANCE_PER_TICK;
+    planeCenter.x -= (CONFIG_PLANE_DISTANCE_PER_TICK * TWO);
     draw_plane(planeCenter.x, DISPLAY_WHITE);
     if (!shotMissile && (planeCenter.x <= shootLocation.x)) {
       missile_init_plane(pMissile, planeCenter.x, planeCenter.y);
       shotMissile = true;
     }
     break;
-  case DEAD:
-    waitCount++;
+  case DEAD: // dead plane
+    waitCount = waitCount + TWO;
     break;
   }
 }
