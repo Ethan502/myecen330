@@ -87,6 +87,8 @@ void missile_init_plane(missile_t *missile, int16_t plane_x, int16_t plane_y) {
   missile->x_dest = rand() % DISPLAY_WIDTH;
   missile->y_dest = DISPLAY_HEIGHT;
 
+  general_init(missile);
+
   // set the current state
   missile->currentState = MOVE;
 }
@@ -147,6 +149,10 @@ void missile_tick(missile_t *missile) {
         display_drawLine(missile->x_origin, missile->y_origin,
                          missile->x_current, missile->y_current, DISPLAY_BLACK);
         missile->currentState = EXGROW; // make the green missiles explode
+      } else if (missile->type == MISSILE_TYPE_PLANE) {
+        missile->currentState = DEAD;
+        display_drawLine(missile->x_origin, missile->y_origin,
+                         missile->x_current, missile->y_current, DISPLAY_BLACK);
       }
     }
     break;
@@ -189,6 +195,15 @@ void missile_tick(missile_t *missile) {
       display_drawLine(missile->x_origin, missile->y_origin, missile->x_current,
                        missile->y_current, DISPLAY_GREEN);
       break;
+    } else if (missile->type == MISSILE_TYPE_PLANE) {
+      missile->length += CONFIG_ENEMY_MISSILE_DISTANCE_PER_TICK * 2;
+      if (missile->length > missile->total_length) {
+        missile->length = missile->total_length;
+      }
+      update_current(missile);
+      display_drawLine(missile->x_origin, missile->y_origin, missile->x_current,
+                       missile->y_current, DISPLAY_WHITE);
+      break;
     }
   // increase the explosion radius in this state
   case EXGROW:
@@ -200,6 +215,10 @@ void missile_tick(missile_t *missile) {
       missile->radius += CONFIG_EXPLOSION_RADIUS_CHANGE_PER_TICK * 2;
       display_fillCircle(missile->x_current, missile->y_current,
                          missile->radius, DISPLAY_RED);
+    } else if (missile->type == MISSILE_TYPE_PLANE) {
+      missile->radius += CONFIG_EXPLOSION_RADIUS_CHANGE_PER_TICK * 2;
+      display_fillCircle(missile->x_current, missile->y_current,
+                         missile->radius, DISPLAY_WHITE);
     }
     break;
   case EXSHRINK: // make the explosions shrink
@@ -213,6 +232,9 @@ void missile_tick(missile_t *missile) {
     } else if (missile->type == MISSILE_TYPE_ENEMY) {
       display_fillCircle(missile->x_current, missile->y_current,
                          missile->radius, DISPLAY_RED);
+    } else if (missile->type == MISSILE_TYPE_PLANE) {
+      display_fillCircle(missile->x_current, missile->y_current,
+                         missile->radius, DISPLAY_WHITE);
     }
     break;
   }

@@ -4,17 +4,20 @@
 #include "intervalTimer.h"
 #include "math.h"
 #include "missile.h"
+#include "plane.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "touchscreen.h"
 
 #define HALF_MISSILES CONFIG_MAX_TOTAL_MISSILES / 2
 #define SQUARE 2
+#define ONE 1
 
 // start up the arrays for good and bad missiles
 missile_t all_missiles[CONFIG_MAX_TOTAL_MISSILES];
 missile_t *bad_missiles = &(all_missiles[0]);
-missile_t *good_missiles = &(all_missiles[CONFIG_MAX_ENEMY_MISSILES]);
+missile_t *good_missiles = &(all_missiles[CONFIG_MAX_ENEMY_MISSILES + ONE]);
+missile_t *plane_missile = &(all_missiles[CONFIG_MAX_ENEMY_MISSILES]);
 static bool first_half = true;
 
 // initialize all the game control stuff
@@ -27,6 +30,8 @@ void gameControl_init() {
   for (uint16_t i = 0; i < CONFIG_MAX_PLAYER_MISSILES; i++) {
     missile_init_dead(&good_missiles[i]);
   }
+
+  plane_init(plane_missile);
   // put the stats in here too
 }
 
@@ -66,8 +71,11 @@ void gameControl_tick() {
     }
     first_half = !first_half;
   }
+
+  plane_tick();
+
   // check to see if any collisions are happening
-  for (uint16_t i = 0; i < CONFIG_MAX_ENEMY_MISSILES; i++) {
+  for (uint16_t i = 0; i < CONFIG_MAX_ENEMY_MISSILES + ONE; i++) {
     for (uint16_t j = 0; j < CONFIG_MAX_TOTAL_MISSILES; j++) {
       if (!missile_is_flying(
               &bad_missiles[i])) { // ignore if the missles isnt flying
