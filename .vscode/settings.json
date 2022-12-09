@@ -12,7 +12,8 @@
         "tictactoedisplay.h": "c",
         "display.h": "c",
         "stdlib.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "buttons.h": "c"
     },
     "cmake.configureOnOpen": true
 }

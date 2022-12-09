@@ -14,17 +14,15 @@ uint32_t isr_triggered_count;
 uint32_t isr_handled_count;
 
 void game_isr() {
+  gameControlTick();
   intervalTimer_ackInterrupt(INTERVAL_TIMER_0);
-  interrupt_flag = true;
-  isr_triggered_count++;
 }
 
 int main() {
-  interrupt_flag = false;
-  isr_triggered_count = 0;
 
   display_init();
   buttons_init();
+  gameControlInit();
   // init for the game stuff
 
   // here is all the interrupt things i dont really understand
@@ -36,5 +34,6 @@ int main() {
 
   intervalTimer_start(INTERVAL_TIMER_0);
 
-  gameControlInit();
+  while (1) {
+  }
 }
